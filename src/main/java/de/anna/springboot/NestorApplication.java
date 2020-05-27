@@ -1,4 +1,4 @@
-package de.anna.springboot.nestor;
+package de.anna.springboot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

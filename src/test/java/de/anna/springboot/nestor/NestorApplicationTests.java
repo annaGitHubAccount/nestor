@@ -1,4 +1,4 @@
-package de.anna.springboot.nestor.nestor;
+package de.anna.springboot.nestor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
