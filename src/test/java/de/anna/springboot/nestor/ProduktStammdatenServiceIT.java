@@ -13,7 +13,8 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class ProduktStammdatenServiceIT {
+public class ProduktStammdatenServiceIT {
+
 
     @Autowired
     private ProduktStammdatenService produktStammdatenService;
