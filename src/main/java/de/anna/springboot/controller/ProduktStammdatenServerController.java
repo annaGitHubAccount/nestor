@@ -2,6 +2,7 @@ package de.anna.springboot.controller;
 
 import de.anna.springboot.model.dto.ProduktStammdatenDTO;
 import de.anna.springboot.service.ProduktStammdatenService;
+import de.anna.springboot.webservice.ProduktStammdatenListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +15,15 @@ import java.util.List;
 public class ProduktStammdatenServerController {
 
     @Autowired
-    ProduktStammdatenService produktStammdatenService;
+    private ProduktStammdatenService produktStammdatenService;
 
     @GetMapping("/produktstammdaten")
-    public List<ProduktStammdatenDTO> generateProduktStammdatenListFromServer(){
+    public ProduktStammdatenListResponse findAllProduktStammdaten(){
 
         List<ProduktStammdatenDTO> produktStammdatenDTOList = produktStammdatenService.findAll();
-        return produktStammdatenDTOList;
+        ProduktStammdatenListResponse produktStammdatenListResponse = new ProduktStammdatenListResponse(produktStammdatenDTOList);
+
+        return produktStammdatenListResponse;
     }
 
 }
