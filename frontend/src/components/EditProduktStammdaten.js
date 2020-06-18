@@ -2,6 +2,7 @@ import React from 'react';
 import SkyLight from 'react-skylight';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import axios from "axios";
 
 class EditProduktStammdaten extends React.Component {
 
@@ -10,7 +11,12 @@ class EditProduktStammdaten extends React.Component {
         super(props);
 
         this.state = {
-            produktStammdatenDTO: this.props.produktStammdatenDTO
+            id: '',
+            symbol: '',
+            name: '',
+            preis: '',
+            aktiv: '',
+            produktArt: ''
         };
     }
 
@@ -26,6 +32,15 @@ class EditProduktStammdaten extends React.Component {
 
         event.preventDefault();
 
+        let newProduktStammdaten = {id: this.state.id,
+            symbol: this.state.symbol,
+            name: this.state.name,
+            preis: this.state.preis,
+            aktiv: this.state.aktiv,
+            produktArt: this.state.produktArt};
+
+        this.addProduktStammdaten(newProduktStammdaten);
+
         this.refs.addDialog.hide();
     }
 
@@ -37,6 +52,27 @@ class EditProduktStammdaten extends React.Component {
         this.refs.addDialog.hide();
     }
 
+    onEditClick = (id) => {
+
+        let produktStammdaten = this.props.produktStammdatenDTOList.find(produktStammdatenIter => id === produktStammdatenIter.id);
+
+                this.setState({
+                        id: produktStammdaten.id,
+                        symbol: produktStammdaten.symbol,
+                        name: produktStammdaten.name,
+                        preis: produktStammdaten.preis,
+                        aktiv: produktStammdaten.aktiv,
+                        produktArt: produktStammdaten.produktArt
+                });
+    }
+
+    addProduktStammdaten = (produktStammdaten) => {
+
+        axios.post('http://localhost:8081/addproduktstammdaten', produktStammdaten)
+            .then(() => this.props.fetchProdStammList())
+            .catch(error => console.log(error))
+    }
+
 
     render() {
 
@@ -44,14 +80,26 @@ class EditProduktStammdaten extends React.Component {
 
             <div>
 
+                <div>
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                            this.onEditClick(this.props.produktStammdatenId)
+                            this.refs.addDialog.show()
+                        }}>
+                        Edit</Button>
+                </div>
+
                 <SkyLight hideOnOverlayClicked ref="addDialog">
                     <h3>Edit Produktstammdaten</h3>
                     <form>
-                        <TextField label="Symbol" placeholder="Symbol" name= {this.state.produktStammdatenDTO.symbol} onChange={this.handleChange} /> <br/><br/>
-                        <TextField label="Name" placeholder="Name" name= {this.state.produktStammdatenDTO.name} onChange={this.handleChange} /> <br/><br/>
-                        <TextField label="Preis" placeholder="Preis" name= {this.state.produktStammdatenDTO.preis} onChange={this.handleChange} /> <br/><br/>
-                        <TextField label="IsAktiv" placeholder="IsAktiv" name= {this.state.produktStammdatenDTO.aktiv} onChange={this.handleChange} /> <br/><br/>
-                        <TextField label="ProduktArt" placeholder="ProduktArt" name= {this.state.produktStammdatenDTO.produktArt} onChange={this.handleChange} /> <br/><br/>
+                        <TextField label="Symbol" placeholder="Symbol" name= "symbol" value = {this.state.symbol} onChange={this.handleChange} /> <br/><br/>
+                        <TextField label="Name" placeholder="Name" name= "name" value = {this.state.name} onChange={this.handleChange} /> <br/><br/>
+                        <TextField label="Preis" placeholder="Preis" name= "preis" value = {this.state.preis} onChange={this.handleChange} /> <br/><br/>
+                        <TextField label="IsAktiv" placeholder="IsAktiv" name= "aktiv" value = {this.state.aktiv} onChange={this.handleChange} /> <br/><br/>
+                        <TextField label="ProduktArt" placeholder="ProduktArt" name= "produktArt" value = {this.state.produktArt} onChange={this.handleChange} /> <br/><br/>
                         <br/>
                         <Button size="small" variant="outlined" color="primary" style={{'margin': '10px'}} onClick={this.handleSubmit}>Save</Button>
                         <Button size="small" variant="outlined" color="secondary" style={{'margin': '10px'}} onClick={this.cancelSubmit}>Cancel</Button>

@@ -14,15 +14,6 @@ class ProduktStammdatenList extends React.Component {
 
         this.state = {
             produktStammdatenDTOList: [],
-
-            produktStammdatenDTO: {
-                id: '',
-                symbol: '',
-                name: '',
-                preis: '',
-                aktiv: '',
-                produktArt: ''
-            }
         };
     }
 
@@ -48,13 +39,6 @@ class ProduktStammdatenList extends React.Component {
             })
     }
 
-    addProduktStammdaten = (produktStammdaten) => {
-
-        axios.post('http://localhost:8081/addproduktstammdaten', produktStammdaten)
-            .then(() => this.getProduktStammdatenList())
-            .catch(error => console.log(error))
-    }
-
     onDeleteClick = (id) => {
 
         axios.delete('http://localhost:8081/deleteproduktstammdaten/' + id)
@@ -68,28 +52,6 @@ class ProduktStammdatenList extends React.Component {
                 }
             })
             .catch(error => console.log(error))
-    }
-
-    onEditClick = (id) => {
-
-        let newProduktStammdatenDTOList = this.state.produktStammdatenDTOList.map((produktStammdatenIter) => {
-            if (id === produktStammdatenIter.id) {
-
-                    this.setState({
-                        produktStammdatenDTO: {
-                            id: produktStammdatenIter.id,
-                            symbol: produktStammdatenIter.symbol,
-                            name: produktStammdatenIter.name,
-                            preis: produktStammdatenIter.preis,
-                            aktiv: produktStammdatenIter.aktiv,
-                            produktArt: produktStammdatenIter.produktArt
-                        }
-                    });
-                }
-            return produktStammdatenIter;
-
-        });
-
     }
 
 
@@ -126,14 +88,11 @@ class ProduktStammdatenList extends React.Component {
                 filterable: false,
                 width: 250,
                 accessor: 'id',
-                Cell: ({value}) => (<Button
-                    size="small"
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => {
-                        this.onEditClick(value)
-                    }}>
-                    Edit</Button>)
+                Cell: ({value}) => (<EditProduktStammdaten
+                                        produktStammdatenId = {value}
+                                        produktStammdatenDTOList = {this.state.produktStammdatenDTOList}
+                                        fetchProdStammList={this.getProduktStammdatenList}
+                                    />)
             },
             {
                 sortable: false,
@@ -156,10 +115,9 @@ class ProduktStammdatenList extends React.Component {
 
             <div>
                 <AddProduktStammdaten
-                    addProduktStammdaten={this.addProduktStammdaten}
+                    fetchProdStammList={this.getProduktStammdatenList}
                 />
-                <EditProduktStammdaten
-                />
+
                 <ReactTable
                     data={this.state.produktStammdatenDTOList}
                     columns={columns}

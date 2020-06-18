@@ -2,6 +2,7 @@ import React from 'react';
 import SkyLight from 'react-skylight';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import axios from "axios";
 
 class AddProduktStammdaten extends React.Component {
 
@@ -32,7 +33,6 @@ class AddProduktStammdaten extends React.Component {
         );
     }
 
-
     handleChange = (event) => {
         this.setState(
             {[event.target.name]: event.target.value}
@@ -50,7 +50,7 @@ class AddProduktStammdaten extends React.Component {
                                     aktiv: this.state.aktiv,
                                     produktArt: this.state.produktArt};
 
-        this.props.addProduktStammdaten(newProduktStammdaten);
+        this.addProduktStammdaten(newProduktStammdaten);
         this.refs.addDialog.hide();
     }
 
@@ -59,6 +59,14 @@ class AddProduktStammdaten extends React.Component {
         event.preventDefault();
         this.refs.addDialog.hide();
     }
+
+    addProduktStammdaten = (produktStammdaten) => {
+
+        axios.post('http://localhost:8081/addproduktstammdaten', produktStammdaten)
+            .then(() => this.props.fetchProdStammList())
+            .catch(error => console.log(error))
+    }
+
 
 
     render() {
